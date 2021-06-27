@@ -1,10 +1,16 @@
-Sample Module Repository
+Physisorption Simulation based on Mean-Field Theory
 ========================
 
-This simple project is an example repo for Python projects.
+This program allows lattice-based simulations of physicals adsorption in mesoporous structures.
 
-`Learn more <http://www.kennethreitz.org/essays/repository-structure-and-python>`_.
+To proceed, one has to have an Nvidia graphic card as the computational kernel is written using CUDA API.
 
----------------
+Though it is an fully working version, it can be hard to get started without a thourough documentation. Therefore, I will gradually provide the following updates:
+- The code will be restructured according to OOP paradigm and refined.
+- The kernel for GPU computations will be uploaded.
+- An instruction on configuration of your computer will be provided to make your start easier.
+- A reasonably concise documentation about the preprocessing and postprocessing funciton written in Pythong will also be provided.
 
-If you want to learn more about ``setup.py`` files, check out `this repository <https://github.com/kennethreitz/setup.py>`_.
+It was developed by me (Artur Svidrytski) while doing research in the group of Prof. Dr. Ulrich Tallarek in Marburg, Germany, in 2019 and 2020. It is distributed under the MIT license.
+
+If you use this program in a scientific project, please cite this paper: A. Svidrytski, D. Hlushkou, M. Thommes, P.A. Monson and U. Tallarek. Modelling the impact of mesoporous silica microstructure on the adsorption hysteresis loop. The Journal of Physical Chemistry C, 124:39 21646 –21655, 2020. DOI: 10.1021/acs.jpcc.0c07571
