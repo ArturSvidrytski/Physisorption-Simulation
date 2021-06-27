@@ -5,7 +5,7 @@ This program allows lattice-based simulations of physicals adsorption in mesopor
 
 To proceed, one has to have an Nvidia graphic card as the computational kernel is written using CUDA API.
 
-Though it is an fully working version, it can be hard to get started without a thourough documentation. Therefore, I will gradually provide the following updates:
+Though it is a fully working version, it can be hard to get started without a thourough documentation. Therefore, I will gradually provide the following updates for this repository:
 
 * The code will be restructured according to OOP paradigm and refined.
 * The kernel for GPU computations will be uploaded.
