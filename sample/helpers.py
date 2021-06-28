@@ -473,7 +473,65 @@ def create_lamrel(sim_dirpath, df_lampres_vals):
                    header = False,
                    index = False)    
 
+def build_file_structure(sim_list_fpath): 
+    df_sim_list = pd.read_csv(sim_list_fpath, sep='\t')
+    df_sim_list_todo = df_sim_list.loc[df_sim_list.is_completed=='no']
+    for i, dic_cur_sim_params in enumerate( 
+            df_sim_list_todo.to_dict(orient="records"),  start=0 ):
+            
+        sim_dirpath = dic_cur_sim_params.get("sim_path")
+        cur_tstar = dic_cur_sim_params.get("Tstar")
+        cur_start_act = dic_cur_sim_params.get("start_act")
+        cur_stop_act = dic_cur_sim_params.get("stop_act")
+        cur_step_act = dic_cur_sim_params.get("step_act")
+        cur_subpoints = dic_cur_sim_params.get("subpoints")
+        cur_substart_act = dic_cur_sim_params.get("substart_act")
+        cur_substop_act = dic_cur_sim_params.get("substop_act")
+        cur_substep_act = dic_cur_sim_params.get("substep_act")
+        cur_scan_state = dic_cur_sim_params.get("scan_state")
+        
+        
+        if not os.path.exists(sim_dirpath):
+            os.makedirs(sim_dirpath)
+        else:
+            remove_files_in_dir(sim_dirpath)
+    
+        if cur_scan_state in ['ads', 'des']:
+            df_lampres_vals = create_df_lampres_scan(cur_scan_state,
+                                        cur_tstar,
+                                        cur_start_act,
+                                        cur_stop_act,
+                                        cur_step_act,
+                                        cur_subpoints,
+                                        cur_substart_act,
+                                        cur_substop_act,
+                                        cur_substep_act)
+        else:
+            df_lampres_vals = create_df_lampres(cur_tstar,
+                                        cur_start_act,
+                                        cur_stop_act,
+                                        cur_step_act,
+                                        cur_subpoints,
+                                        cur_substart_act,
+                                        cur_substop_act,
+                                        cur_substep_act)
+            
+        create_lampres( sim_dirpath, df_lampres_vals)
+        create_lamrel( sim_dirpath, df_lampres_vals)
+        create_sim_params(sim_dirpath, dic_cur_sim_params)  
 
-
-
+def run_sim_jobs(sim_list_fpath, mft_exe_fpath):
+    df_sim_list = pd.read_csv(sim_list_fpath, sep='\t')
+    df_sim_list_todo = df_sim_list.loc[df_sim_list.is_completed=='no']
+    for i, dic_cur_sim_params in enumerate( 
+            df_sim_list_todo.to_dict(orient="records"),  start=1 ):
+        sim_dirpath = dic_cur_sim_params.get("sim_path")
+        print(f'Running ({i} of {len(df_sim_list_todo)}) {sim_dirpath}')
+        subprocess.run([mft_exe_fpath, sim_dirpath], stdout=subprocess.PIPE)
+    
+        df_sim_list = pd.read_csv(sim_list_fpath, sep='\t')    
+        df_sim_list.loc[dic_cur_sim_params.get('sim_number'),
+                        'is_completed'] = 'yes'
+        df_sim_list.to_csv(sim_list_fpath, sep='\t', index=False)    
+    
 
