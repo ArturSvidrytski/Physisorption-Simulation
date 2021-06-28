@@ -477,8 +477,7 @@ def build_file_structure(sim_list_fpath):
     df_sim_list = pd.read_csv(sim_list_fpath, sep='\t')
     df_sim_list_todo = df_sim_list.loc[df_sim_list.is_completed=='no']
     for i, dic_cur_sim_params in enumerate( 
-            df_sim_list_todo.to_dict(orient="records"),  start=0 ):
-            
+            df_sim_list_todo.to_dict(orient="records"),  start=0 ):            
         sim_dirpath = dic_cur_sim_params.get("sim_path")
         cur_tstar = dic_cur_sim_params.get("Tstar")
         cur_start_act = dic_cur_sim_params.get("start_act")
@@ -489,8 +488,7 @@ def build_file_structure(sim_list_fpath):
         cur_substop_act = dic_cur_sim_params.get("substop_act")
         cur_substep_act = dic_cur_sim_params.get("substep_act")
         cur_scan_state = dic_cur_sim_params.get("scan_state")
-        
-        
+                
         if not os.path.exists(sim_dirpath):
             os.makedirs(sim_dirpath)
         else:
@@ -534,4 +532,3 @@ def run_sim_jobs(sim_list_fpath, mft_exe_fpath):
                         'is_completed'] = 'yes'
         df_sim_list.to_csv(sim_list_fpath, sep='\t', index=False)    
     
-

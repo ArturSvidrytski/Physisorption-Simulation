@@ -25,7 +25,7 @@ list_start_act = [0.05, 0.05]
 list_stop_act = [1.00, 1.00]
 list_step_act = [0.05, 0.05]
 list_subpoints = ['no', 'ads'] # 'no'/'ads'/'des'/'adsdes'
-list_substart_act = [0.376, 0.376]   
+list_substart_act = [0.8, 0.8]   
 list_substop_act = [0.84,  0.84]       
 list_substep_act = [0.002, 0.002]
 list_scan_state = ['des', 'no']
@@ -89,8 +89,6 @@ obj3d_bulk = hp.add_bulk(obj3d, bulk_width)
 hp.write_map( obj3d_bulk, map_fpath )
 hp.write_map_size(obj3d_bulk.shape, map_size_fpath)
 
-    
-
 for (cur_tstar, 
      cur_e_wf,     
      cur_start_act,
@@ -122,73 +120,10 @@ for (cur_tstar,
 			substop_act  = cur_substop_act,
 			substep_act  = cur_substep_act,
 			scan_state   =  cur_scan_state) 
-        
-#%% Choose start and end points for the simulations and run mft.exe
 
 
-#def run_sim():    
-#    return(0)
-
-
-
-
-
-df_sim_list = pd.read_csv(sim_list_fpath, sep='\t')
-df_sim_list_todo = df_sim_list.loc[df_sim_list.is_completed=='no']
-
-for i, dic_cur_sim_params in enumerate( 
-        df_sim_list_todo.to_dict(orient="records"),  start=0 ):
-        
-    sim_dirpath = dic_cur_sim_params.get("sim_path")
-    cur_tstar = dic_cur_sim_params.get("Tstar")
-    cur_start_act = dic_cur_sim_params.get("start_act")
-    cur_stop_act = dic_cur_sim_params.get("stop_act")
-    cur_step_act = dic_cur_sim_params.get("step_act")
-    cur_subpoints = dic_cur_sim_params.get("subpoints")
-    cur_substart_act = dic_cur_sim_params.get("substart_act")
-    cur_substop_act = dic_cur_sim_params.get("substop_act")
-    cur_substep_act = dic_cur_sim_params.get("substep_act")
-    cur_scan_state = dic_cur_sim_params.get("scan_state")
-
-    
-    if not os.path.exists(sim_dirpath):
-        os.makedirs(sim_dirpath)
-    else:
-        hp.remove_files_in_dir(sim_dirpath)
-
-    if cur_scan_state in ['ads', 'des']:
-        df_lampres_vals = hp.create_df_lampres_scan(cur_scan_state,
-                                    cur_tstar,
-                                    cur_start_act,
-                                    cur_stop_act,
-                                    cur_step_act,
-                                    cur_subpoints,
-                                    cur_substart_act,
-                                    cur_substop_act,
-                                    cur_substep_act)
-        
-    else:
-        df_lampres_vals = hp.create_df_lampres(cur_tstar,
-                                    cur_start_act,
-                                    cur_stop_act,
-                                    cur_step_act,
-                                    cur_subpoints,
-                                    cur_substart_act,
-                                    cur_substop_act,
-                                    cur_substep_act)
-        
-           
-    print(f'Running ({i+1} of {len(df_sim_list_todo)}) {sim_dirpath}')
-
-    hp.create_lampres( sim_dirpath, df_lampres_vals)
-    hp.create_lamrel( sim_dirpath, df_lampres_vals)
-    hp.create_sim_params(sim_dirpath, dic_cur_sim_params)   
-    subprocess.run([mft_exe_fpath_src, sim_dirpath], stdout=subprocess.PIPE)
-
-    df_sim_list = pd.read_csv(sim_list_fpath, sep='\t')    
-    df_sim_list.loc[dic_cur_sim_params.get('sim_number'), 'is_completed'] = 'yes'
-    df_sim_list.to_csv(sim_list_fpath, sep='\t', index=False)
-
+hp.build_file_structure(sim_list_fpath)
+hp.run_sim_jobs(sim_list_fpath, mft_exe_fpath_src)
 
 
 
