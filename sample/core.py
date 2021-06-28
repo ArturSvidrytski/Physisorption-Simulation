@@ -24,11 +24,11 @@ list_e_wf = [ 1.3, 2.0 ]
 list_start_act = [0.05, 0.05]
 list_stop_act = [1.00, 1.00]
 list_step_act = [0.05, 0.05]
-list_subpoints = ['no', 'no'] # 'no'/'ads'/'des'/'adsdes'
+list_subpoints = ['no', 'ads'] # 'no'/'ads'/'des'/'adsdes'
 list_substart_act = [0.376, 0.376]   
 list_substop_act = [0.84,  0.84]       
 list_substep_act = [0.002, 0.002]
-list_scan_state = ['no', 'no']
+list_scan_state = ['des', 'no']
 
 ##
 
@@ -141,6 +141,14 @@ for i, dic_cur_sim_params in enumerate(
         
     sim_dirpath = dic_cur_sim_params.get("sim_path")
     cur_tstar = dic_cur_sim_params.get("Tstar")
+    cur_start_act = dic_cur_sim_params.get("start_act")
+    cur_stop_act = dic_cur_sim_params.get("stop_act")
+    cur_step_act = dic_cur_sim_params.get("step_act")
+    cur_subpoints = dic_cur_sim_params.get("subpoints")
+    cur_substart_act = dic_cur_sim_params.get("substart_act")
+    cur_substop_act = dic_cur_sim_params.get("substop_act")
+    cur_substep_act = dic_cur_sim_params.get("substep_act")
+    cur_scan_state = dic_cur_sim_params.get("scan_state")
 
     
     if not os.path.exists(sim_dirpath):
@@ -148,16 +156,7 @@ for i, dic_cur_sim_params in enumerate(
     else:
         hp.remove_files_in_dir(sim_dirpath)
 
-    if scanning[i]!=False:
-        df_lampres_vals = hp.create_df_lampres(cur_tstar,
-                                    cur_start_act,
-                                    cur_stop_act,
-                                    cur_step_act,
-                                    cur_subpoints,
-                                    cur_substart_act,
-                                    cur_substop_act,
-                                    cur_substep_act)
-    else:
+    if cur_scan_state in ['ads', 'des']:
         df_lampres_vals = hp.create_df_lampres_scan(cur_scan_state,
                                     cur_tstar,
                                     cur_start_act,
@@ -167,6 +166,17 @@ for i, dic_cur_sim_params in enumerate(
                                     cur_substart_act,
                                     cur_substop_act,
                                     cur_substep_act)
+        
+    else:
+        df_lampres_vals = hp.create_df_lampres(cur_tstar,
+                                    cur_start_act,
+                                    cur_stop_act,
+                                    cur_step_act,
+                                    cur_subpoints,
+                                    cur_substart_act,
+                                    cur_substop_act,
+                                    cur_substep_act)
+        
            
     print(f'Running ({i+1} of {len(df_sim_list_todo)}) {sim_dirpath}')
 
