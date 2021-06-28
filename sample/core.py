@@ -131,21 +131,21 @@ hp.run_sim_jobs(sim_list_fpath, mft_exe_fpath_src)
  
 df_sim_list = pd.read_csv(sim_list_fpath, sep='\t')
 
-origin_data_dirname = 'data_to_plot'
-origin_data_dirpath = path.join( data_dir,
+dpoints_dirname = 'density_datapoints'
+dpoints_dirpath = path.join( data_dir,
                               object_dirname,
-                              origin_data_dirname )
+                              dpoints_dirname )
                               
-if not os.path.exists( origin_data_dirpath ):
-            os.makedirs( origin_data_dirpath)
+if not os.path.exists( dpoints_dirpath ):
+            os.makedirs( dpoints_dirpath)
 
-data_to_plot_progress_fname = 'data_to_plot_progress.siminfo'
-data_to_plot_progress_fpath = os.path.join( data_dir,
+densdpoints_progress_fname = 'density_dpoints_progress.info'
+densdpoints_progress_fpath = os.path.join( data_dir,
                               object_dirname,
-                              data_to_plot_progress_fname )
+                              densdpoints_progress_fname )
 
-if os.path.isfile(data_to_plot_progress_fpath) != True:
-    df_data_to_plot_progress = pd.DataFrame(columns=[
+if os.path.isfile(densdpoints_progress_fpath) != True:
+    df_densdpoints_progress = pd.DataFrame(columns=[
                       'sim_num',
                       'sim_object',
                       'sim_name',
@@ -153,7 +153,7 @@ if os.path.isfile(data_to_plot_progress_fpath) != True:
                       'e_wf',
                       'csv_path',
                       'sim_path'])        
-    df_data_to_plot_progress.to_csv(data_to_plot_progress_fpath,
+    df_densdpoints_progress.to_csv(densdpoints_progress_fpath,
                                     sep='\t',
                                     index=False)
 
@@ -165,11 +165,11 @@ dic_mft_sim_res = { 'sim_num':[],
                    'data':[],
                    'sim_path':[] }
 
-df_data_to_plot_progress = pd.read_csv(data_to_plot_progress_fpath, sep='\t')
+df_densdpoints_progress = pd.read_csv(densdpoints_progress_fpath, sep='\t')
 for i in df_sim_list.index:
 #for i in range(135, 145):
     cur_sim_num = df_sim_list.at[i, 'sim_number']
-    if cur_sim_num not in df_data_to_plot_progress['sim_num'].values:
+    if cur_sim_num not in df_densdpoints_progress['sim_num'].values:
         print('_________ Simulation', i, '_________')        
         cur_sim_path = df_sim_list.at[i, 'sim_path']
         cur_sim_object = os.path.basename( os.path.dirname( cur_sim_path ) )
@@ -189,7 +189,7 @@ for i in df_sim_list.index:
         dic_mft_sim_res['sim_path'].append(cur_sim_path)
 
 
-
+# sort points
 for i in range(len(dic_mft_sim_res['data'])):
     tmp = dic_mft_sim_res['data'][i]
     tmp = pd.concat([
@@ -207,7 +207,7 @@ for idx in range( len(dic_mft_sim_res['data']) ):
     #df_origin_plot[cur_pres_col_name] = dic_mft_sim_res['data'][idx]['relpres'].values
     #df_origin_plot[cur_col_name] = \
     #    dic_mft_sim_res['data'][idx]['density'].values
-    df_data_to_plot_progress = pd.read_csv(data_to_plot_progress_fpath, sep='\t')
+    df_densdpoints_progress = pd.read_csv(densdpoints_progress_fpath, sep='\t')
     
     df_origin_plot = pd.DataFrame(
         {'state':dic_mft_sim_res['data'][idx]['state'].values,
@@ -215,20 +215,20 @@ for idx in range( len(dic_mft_sim_res['data']) ):
          'density':dic_mft_sim_res['data'][idx]['density'].values})
     
     cur_data_table_fname = f"{dic_mft_sim_res['sim_name'][idx]}.csv"
-    origin_data_fpath = os.path.join( origin_data_dirpath,
+    dpoints_fpath = os.path.join( dpoints_dirpath,
                                       cur_data_table_fname )    
-    df_origin_plot.to_csv(origin_data_fpath, sep='\t', index_label='row_number')
+    df_origin_plot.to_csv(dpoints_fpath, sep='\t', index_label='row_number')
     
-    df_data_to_plot_progress = df_data_to_plot_progress.append({
+    df_densdpoints_progress = df_densdpoints_progress.append({
                         'sim_num': dic_mft_sim_res['sim_num'][idx],
                         'sim_object': dic_mft_sim_res['sim_object'][idx],
                         'sim_name': dic_mft_sim_res['sim_name'][idx],
                         'tstar': dic_mft_sim_res['tstar'][idx],
                         'e_wf': dic_mft_sim_res['e_wf'][idx],
-                        'csv_path': origin_data_fpath,
+                        'csv_path': dpoints_fpath,
                         'sim_path': dic_mft_sim_res['sim_path'][idx]}, ignore_index=True)
     
-    df_data_to_plot_progress.to_csv(data_to_plot_progress_fpath, sep='\t', index=False)
-    df_data_to_plot_progress = pd.read_csv(data_to_plot_progress_fpath, sep='\t')
+    df_densdpoints_progress.to_csv(densdpoints_progress_fpath, sep='\t', index=False)
+    df_densdpoints_progress = pd.read_csv(densdpoints_progress_fpath, sep='\t')
 
 
