@@ -214,7 +214,7 @@ def write_lambda_vals(df_lampres, fpath):
         writer.writerows(df_lampres)
 
 
-def create_df_lampres(start, stop, step, tstar, subpoints = 'no', substart = 0, substop = 0, substep = 0 ):
+def create_df_lampres(tstar, start, stop, step, subpoints = 'no', substart = 0, substop = 0, substep = 0 ):
     lamrel_vals_ads = np.round( np.arange(start,
                                       stop+step, 
                                       step, 
@@ -254,9 +254,9 @@ def create_df_lampres(start, stop, step, tstar, subpoints = 'no', substart = 0, 
     return(df_lampres_vals)
 
 
-def create_df_lampres_scan(start, stop, step, tstar, state, subpoints = 'no', substart = 0, substop = 0, substep = 0 ):
+def create_df_lampres_scan(scan_state, tstar, start, stop, step, subpoints = 'no', substart = 0, substop = 0, substep = 0 ):
     
-    if state == 'ads':
+    if scan_state == 'ads':
         lamrel_vals_ads = np.round( np.arange(start,
                                       stop+step, 
                                       step, 
@@ -267,7 +267,7 @@ def create_df_lampres_scan(start, stop, step, tstar, state, subpoints = 'no', su
         
         
         
-    elif state == 'des':
+    elif scan_state == 'des':
         lamrel_vals_des = np.round( np.arange(stop, 
                                               start-step, 
                                               -step, 
@@ -357,27 +357,43 @@ def write_new_sim_list(sim_list_fpath):
                           'Tstar',
                           'e_wf',
                           'e_ff',
-                          'precision',
-                          'max_iter',
-                          'eval_iter',
-                          'gpu_device',
-                          'gpu_blocks',
-                          'gpu_threads',
+                          'start_act',
+           					'stop_act',
+        					'step_act',
+        					'subpoints',
+        					'substart_act',
+        					'substop_act',
+        					'substep_act',
+        					'scan_state',
+                            'precision',  
+                            'max_iter',
+                            'eval_iter',  
+                            'gpu_device',    
+                            'gpu_blocks',    
+                            'gpu_threads',
                           'sim_path'])
         df_sim_list.to_csv(sim_list_fpath, sep='\t', index=False)
-        return(0)
 
+
+    
 def add_sim_jobs(object_dirpath,                
                 tstar = 0.87,
                 e_wf = 1.3,
                 e_ff = 1.0,
-                precision = 1e-6,
-                max_iter = np.int32(1e4),
-                eval_iter = 30,
-                gpu_device = 0,
-                gpu_blocks = 128,
-                gpu_threads = 1024):
-    
+                start_act = 0.05,
+				stop_act = 1.0,
+				step_act = 0.05,
+				subpoints = 'no',
+				substart_act =  0.5,
+				substop_act = 0.7,
+				substep_act = 0.005,
+				scan_state = 'no',
+				precision = 1e-6,
+				max_iter = np.int32(1e4),
+				eval_iter = 30,
+				gpu_device = 0,
+				gpu_blocks = 128,
+				gpu_threads = 1024):
     sim_list_fname = "sim_list.siminfo"
     sim_list_fpath = path.join( object_dirpath,
                                sim_list_fname )
@@ -396,6 +412,14 @@ def add_sim_jobs(object_dirpath,
                     'Tstar': tstar,
                     'e_wf': e_wf,
                     'e_ff': e_ff,
+                    'start_act': start_act,     
+					'stop_act': stop_act,     
+					'step_act': step_act,     
+					'subpoints': subpoints,    
+					'substart_act': substart_act, 
+					'substop_act': substop_act,
+					'substep_act': substep_act,
+					'scan_state': scan_state,   
                     'precision': precision,  
                     'max_iter': max_iter,
                     'eval_iter': eval_iter,  
@@ -429,7 +453,7 @@ def create_sim_params(sim_dirpath,
                          sep='\t',
                          index = False)   
     
-    return(0)
+
 
 
 def create_lampres(sim_dirpath, df_lampres_vals):    
@@ -437,7 +461,7 @@ def create_lampres(sim_dirpath, df_lampres_vals):
     lampres_fpath = path.join( sim_dirpath,
                       lampres_fname )
     df_lampres_vals.to_csv(lampres_fpath, sep='\t', index_label = 'row_number')
-    return(0)
+
 
 
 def create_lamrel(sim_dirpath, df_lampres_vals):
@@ -448,7 +472,7 @@ def create_lamrel(sim_dirpath, df_lampres_vals):
                    sep='\t',
                    header = False,
                    index = False)    
-    return(0)
+
 
 
 
