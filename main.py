@@ -8,7 +8,7 @@ Created on Sun Feb  3 19:38:29 2019
 
 import os
 os.chdir( 'G:/Physisorption-Simulation'  )
-import sample.helpers as hp
+import physisorption.helpers as hp
 from os import path
 import numpy as np
 import subprocess
@@ -36,6 +36,7 @@ list_scan_state = ['des', 'no']
 
 folder_path = r"d:\1_Work\PROJECTS\2017\MFT\MFT_RUN\MFT_RUN"
 mft_exe_dirpath_src = r"d:\1_Work\PROJECTS\2017\MFT\MFT_RUN\x64\Debug"
+#mft_exe_dirpath_src = r"G:\Physisorption-Simulation\cuda_kernel\x64\Debug"
 mft_exe_fname = "MFT_RUN.exe"
 mft_exe_fpath_src = path.join( mft_exe_dirpath_src, mft_exe_fname )
 mft_exe_fpath_dst = path.join( data_dir, mft_exe_fname )
