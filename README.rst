@@ -7,8 +7,7 @@ To proceed, one has to have an Nvidia graphic card as the computational kernel i
 
 Though it is a fully working version, it can be hard to get started without thorough documentation. Therefore, I will gradually provide the following updates for this repository:
 
-* The code will be restructured according to the OOP paradigm and refined.
-* The kernel for GPU computations will be uploaded.
+* The code will be restructured according to the OOP paradigm and refined. All functions are currently put into one file, because it makes the restructuring easier for me.
 * An instruction for the configuration of your computer will be provided to make your start easier.
 * A reasonably concise documentation about the preprocessing and postprocessing functions written in Python will also be provided.
 
